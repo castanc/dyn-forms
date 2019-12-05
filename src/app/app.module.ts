@@ -3,10 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { MainMenuComponent } from './components/main-menu/main-menu.component';
+import { GenericComponent } from './components/generic/generic.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MainMenuComponent,
+    GenericComponent
   ],
   imports: [
     BrowserModule,
