@@ -1,1 +1,11 @@
-<p>main-menu works!</p>
+<label>Date</label>
+<input type="date">
+<label>Time</label>
+<input type="time">
+<label>Record Type</label>>
+<select 
+[(ngModel)] = "bs.FormName"
+(change)="onSelectedItemChanged(bs.FormName)"
+name = "formName">
+    <option *ngFor="let item of bs.FormNames" [selected]="item.Id == bs.FormName" [value]="item">{{item}}</option> 
+</select>
