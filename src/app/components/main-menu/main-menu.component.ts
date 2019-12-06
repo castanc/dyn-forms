@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormsModule, NgForm } from '@angular/forms';
+
+import { BackEndService } from '../../services/backend'
 
 @Component({
   selector: 'app-main-menu',
@@ -7,9 +11,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainMenuComponent implements OnInit {
 
-  constructor() { }
+   constructor( protected bs: BackEndService,
+    protected router: Router,
+    protected route: ActivatedRoute)
+  {
+    console.log("mainMenu.constructor())");
+  }
+
 
   ngOnInit() {
   }
+  
+    onSelectedItemChanged(formName: string)
+  {
+    console.log('Form Selected', formName)
+
+    this.bs.Form = this.bs.DA.LoadForm(formName);
+    if (this.bs.Form )
+    {
+      console.log('onSelectedItemChanged, formName', this.bs.Form);
+      //this.router.navigate(['Nuevo/Exercise'], {relativeTo: this.route});
+      this.router.navigate(['create']);
+    }
+    else
+    {
+        throw new Error("Invalid Form")
+    }
+
+  }
+
 
 }
