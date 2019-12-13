@@ -27,6 +27,15 @@ export class Mock implements IDataProvider{
         let f = new Form();
         f.Title = "Exercise Record";
 
+        let fId = new Field<number>("Id",false,0);
+        f.AddFieldTyped<number>(fId)    ;
+
+        let fFecha = new Field<Date>("Fecha");
+        f.AddFieldTyped<Date>(fFecha);
+
+        let fRecordType = new Field<number>("RecordType",true,0);
+        f.AddFieldTyped<number>(fRecordType);
+
         let fDistance = new Field<number>("Distance",true,2000,100,10000);
         f.AddFieldTyped<number>(fDistance);
         f.AddFieldUI(new FieldUI(fDistance.Id,fDistance.Name,"input","number",4));
@@ -54,6 +63,16 @@ export class Mock implements IDataProvider{
     private createDrugForm():Form {
         let f = new Form();
         f.Title = "Drug Record";
+
+        let fId = new Field<number>("Id",false,0);
+        f.AddFieldTyped<number>(fId)    ;
+
+        let fFecha = new Field<Date>("Fecha");
+        f.AddFieldTyped<Date>(fFecha);
+
+        let fRecordType = new Field<number>("RecordType",true,0);
+        f.AddFieldTyped<number>(fRecordType);
+
 
         let fDrug = new Field<number>("Drug",false,0);
         f.AddFieldTyped<number>(fDrug);
