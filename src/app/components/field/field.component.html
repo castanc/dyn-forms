@@ -1,0 +1,14 @@
+<div>
+    <label *ngIf="fUI.Label!=''">{{fUI.Label}}</label>
+    <input *ngIf="fUI.HtmlType=='input'" [name]="f.Name"  [id] = "f.Name"
+        [type]="fUI.HtmlType"
+        [placeholder]="fUI.placeholder" 
+        [required]="f.Required" 
+        [(ngModel)]="f.Value">
+
+    <select *ngIf="fUI.HtmlType=='select'" [name]="f.Name"
+            (change)="onSelectedItemChanged()"
+            [(ngModel)]="fUI.SelectedValue" >
+           <option *ngFor="let item of fUI.List" [value]="item.Id">{{item.Value}}</option> 
+        </select>
+</div>
