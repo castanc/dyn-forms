@@ -1,0 +1,22 @@
+
+<form (ngSubmit)="onSubmit(f2)" #f2="ngForm" enableNativeValidation >
+<label>Date</label>
+<input type="date"
+[value]="CurrentDate"
+required
+#cDate
+>
+<label>Time</label>
+<input type="time" required step="1"
+[value] = "CurrentTime"
+#cTime
+>
+<label>Record Type</label>
+<select 
+[(ngModel)] = "bs.FormId"
+(change)="onSelectedItemChanged(bs.FormId)"
+name = "formName">
+    <option *ngFor="let item of bs.FormNames" [selected]="item.Id == bs.FormName" [value]="item.Id">{{item.Value}}</option> 
+</select>
+
+</form>
