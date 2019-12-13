@@ -47,6 +47,8 @@ export class GenericComponent implements OnInit {
     }
     console.log(m);
     */
+    this.f.Fecha = this.bs.UserDate;
+    this.f.RecordType = this.bs.FormId;
     this.f.UpdateDTO();
 
   }
