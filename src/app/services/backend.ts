@@ -21,6 +21,7 @@ export class BackEndService {
     private userDate: Date = new Date();
     DateString = "";
     TimeString = "";
+    TotalRows: number = 0;
 
     DA: IDataProvider;
     dp: string;
