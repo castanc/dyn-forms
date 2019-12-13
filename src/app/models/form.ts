@@ -8,9 +8,12 @@ import { TypeofExpr } from '@angular/compiler'
 
 export class Form{
     Id: number = 0;
+    RecordType: number = 0;
+    Fecha: Date;
     Code: string;
     IsTabular: boolean = false;
     Title: string = "";
+    TotalRows: number = 0;
     private fields: Array<Field<any>>;
     private DTOFields: Array<DTOField<any>>
     private RawDTO: Array<any>;
@@ -57,9 +60,11 @@ export class Form{
 
     }
 
-    UpdateDTO()
+    UpdateDTO( )
     {
         this.RawDTO = new Array<any>();
+        this.fields[1].Value = this.Fecha;
+        this.fields[2].Value = this.RecordType;
         for (let index = 0; index < this.fields.length; index++)
         {
           let dtoField = this.DTOFields.filter(x=>x.Id==this.fields[index].Id)[0];
