@@ -3,54 +3,82 @@ import { Form } from '../models/form';
 import { Field } from '../models/field'
 import { FieldUI } from '../models/fieldUI'
 import { findStaticQueryIds } from '@angular/compiler';
+import { Time } from '@angular/common';
+import { ListItem } from '../models/list-item';
+import { DTOField} from '../models/DTOField'
 
 export class Mock implements IDataProvider{
-    LoadFormList(): string[] {
-        return ['Food','Drug','Exercise']
+    LoadFormList(): Array<ListItem> {
+        let arr = new Array<ListItem>();
+        arr.push(new ListItem(0,"Food"));
+        arr.push(new ListItem(1,"Exercise"));
+        arr.push(new ListItem(2,"Drug"));
+
+        return arr; 
     }   
     
     private createFoodForm():Form {
         let f = new Form();
-            f.AddField(new Field<Date>());
 
         return f;
     }
 
     private createExeForm():Form {
         let f = new Form();
-        let fui = new FieldUI();
-        let fl = new Field<Date>();
+        f.Title = "Exercise Record";
 
-        fl.Max = new Date();
-        fl.Min = new Date(2015,1,1);
-        f.AddField(fl);
-        fui.Label = "Date";
-        f.AddFieldUI(fui);
+        let fDistance = new Field<number>("Distance",true,2000,100,10000);
+        f.AddFieldTyped<number>(fDistance);
+        f.AddFieldUI(new FieldUI(fDistance.Id,fDistance.Name,"input","number",4));
 
-        let f2 = new Field<string>();
-        fui = new FieldUI();
-        fui.Label = "Time";
-        fui.HtmlInputType = "text";
-        fui.HtmlType = "input";
-        fui.PlaceHolder = "Time";
-        f.AddFieldUI(fui);
+        let fTime = new Field<Time>("Duration",true);
+        f.AddFieldTyped<Time>(fTime);
+        f.AddFieldUI(new FieldUI(fTime.Id,fTime.Name,"input","time"));
 
-        let distance = new Field<number>();
-        distance.Max = 10000;
-        distance.Min = 0;
-        distance.Value = 2000;
-        f.AddField(distance);
+        let fCalories = new Field<number>("Calories",false,0);
+        f.AddFieldTyped<number>(fCalories);
+        f.AddFieldUI(new FieldUI(fCalories.Id,fCalories.Name,"input","number",3));
 
-        fui = new FieldUI();
-        fui.Label = "Distance";
-        fui.PlaceHolder = fui.Label;
-        f.AddFieldUI(fui);
+        let fMood = new Field<number>("Mood",false,0);
+        f.AddFieldTyped<number>(fMood);
+        let fUIMood = new FieldUI(fMood.Id,fMood.Name,"select");
+        fUIMood.AddListItem(new ListItem(0,"Easy"));
+        fUIMood.AddListItem(new ListItem(1,"Normal"));
+        fUIMood.AddListItem(new ListItem(2,"Hard"));
+        fUIMood.SelectedValue = 0;
+        f.AddFieldUI(fUIMood);
 
         return f;
     }
-    
+
+    private createDrugForm():Form {
+        let f = new Form();
+        f.Title = "Drug Record";
+
+        let fDrug = new Field<number>("Drug",false,0);
+        f.AddFieldTyped<number>(fDrug);
+        let fUIDrug = new FieldUI(fDrug.Id,fDrug.Name,"select");
+        fUIDrug.AddListItem(new ListItem(0,"Diaformina LP"));
+        fUIDrug.AddListItem(new ListItem(1,"Glimepirida"));
+        fUIDrug.AddListItem(new ListItem(2,"Crestor"));
+        fUIDrug.AddListItem(new ListItem(3,"Diaris"));
+        fUIDrug.AddListItem(new ListItem(3,"Micardis"));
+        fUIDrug.SelectedValue = 0;
+        f.AddFieldUI(fUIDrug);
+
+
+
+        return f;
+    }
+
+
+
     LoadForm(formName: string): import("../models/form").Form {
-        return this.createExeForm();
+        if ( formName.toLowerCase() == "exercise")
+            return this.createExeForm();
+        else if ( formName.toLowerCase() == "drug")
+            return this.createDrugForm();
+        return null;
     }
     
     SaveForm(formName: string): number {
