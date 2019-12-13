@@ -1,31 +1,35 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from "@angular/forms";
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { APP_BASE_HREF, LocationStrategy, HashLocationStrategy } from '@angular/common';
-
+import { RouterModule, Routes } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MainMenuComponent } from './components/main-menu/main-menu.component';
 import { GenericComponent } from './components/generic/generic.component';
-import { BackEndService } from './services/backend';
 import { BaseComponent } from './components/base/base.component';
+import { BackEndService } from './services/backend';
+import { FieldComponent } from './components/field/field.component'
+
+const appRoutes: Routes = [
+  { path: '', component: BaseComponent },
+  { path: 'create', component: GenericComponent},
+
+]
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainMenuComponent,
     GenericComponent,
-    BaseComponent
+    BaseComponent,
+    FieldComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    RouterModule.forRoot(appRoutes),
   ],
-  providers: [BackEndService,
-    {provide: APP_BASE_HREF, useValue: '/'},
-    {provide: LocationStrategy, useClass: HashLocationStrategy}],
+  providers: [BackEndService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
