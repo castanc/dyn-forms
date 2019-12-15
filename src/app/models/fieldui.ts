@@ -15,6 +15,11 @@ export class FieldUI{
     ImageId: number;    
     List: Array<ListItem> = null;
     SelectedValue: number = 0;
+    RelatedMap: string; 
+    ReadOnly: boolean = false;
+    ImageField: string ="";
+    ImageSource: string = "";
+    ImageFieldId: number = null;
 
     constructor(idField:number,
         name:string,
@@ -25,6 +30,9 @@ export class FieldUI{
         placeholder:string=label,
         htmlSelectId:string = "",
         labelMode:string="top",
+        relatedMap:string = null,
+        readOnly: boolean = false
+
         )
     {
         this.IdField = idField;
@@ -36,6 +44,8 @@ export class FieldUI{
         this.Label = label;
         this.PlaceHolder = placeholder;
         this.LabelMode = labelMode;
+        this.RelatedMap = relatedMap;
+        this.ReadOnly = readOnly;
     }
 
     AddListItem(item: ListItem):void

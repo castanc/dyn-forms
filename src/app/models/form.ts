@@ -5,55 +5,52 @@ import { ListItem } from './list-item'
 import { DTORecord } from './DTORecord'
 import { DTOField } from './DTOField'
 import { TypeofExpr } from '@angular/compiler'
+import { RelatedMap } from './related-map'
 
 export class Form{
     Id: number = 0;
     RecordType: number = 0;
     Fecha: Date;
-    Code: string;
     IsTabular: boolean = false;
     Title: string = "";
-    TotalRows: number = 0;
     private fields: Array<Field<any>>;
-    private DTOFields: Array<DTOField<any>>
-    private RawDTO: Array<any>;
+    private dtoFields: Array<DTOField<any>> = [];
+    Rows: Array<Array<DTOField<any>>> = [];
     private ui: Array<FieldUI>;
+    CurrentRow: number = 0;
+    ChildForm: string;
+    IgnoreFields = false;
+
     get Fields(){ return this.fields;}
     get UI() { return this.ui;}
+    get DTOFields() { return this.Rows[this.CurrentRow];}
 
-    ChildForm: string;
+    public Maps: Array<RelatedMap> = [];
 
 
     constructor(){
         this.fields = new Array<Field<any>>();
-        this.DTOFields = new Array<DTOField<any>>();
         this.ui = new Array<FieldUI>();
+    }
+
+    AddFirstRow(){
+        this.Rows.push(this.dtoFields);
     }
 
     GetField(id:number):Field<any>{
         return this.fields.filter(x => x.Id == id)[0];
     }
 
-    /*
-    AddField(f: Field<any>)
-    {
-        f.Id = this.Fields.length;
-        this.Fields.push(f);
-    }
-    */
-
-    //TODO: Verify if this is better that casting fron any
     AddFieldTyped<T>(f: Field<T>){
         f.Id = this.Fields.length;
         this.Fields.push(f);
 
         let dtoField = new DTOField<T>();
-        dtoField.Id = f.Id;
         dtoField.Value = f.Value;
-        this.DTOFields.push(dtoField);
+        this.dtoFields.push(dtoField);
         
     }
-
+   
     AddFieldUI(f: FieldUI){
         f.Id = this.UI.length;
         this.UI.push(f);
@@ -62,17 +59,12 @@ export class Form{
 
     UpdateDTO( )
     {
-        this.RawDTO = new Array<any>();
         this.fields[1].Value = this.Fecha;
         this.fields[2].Value = this.RecordType;
         for (let index = 0; index < this.fields.length; index++)
         {
-          let dtoField = this.DTOFields.filter(x=>x.Id==this.fields[index].Id)[0];
-          dtoField.Value = this.fields[index].Value;
-          this.RawDTO.push(this.fields[index].Value);
+          console.log("Field type:",this.fields[index].Name, this.fields[index].Value, typeof(this.fields[index].Value));
         }
-        console.log("UpdateDTO", this.DTOFields);
-        console.log("RawDTO",this.RawDTO);
     
     }
 

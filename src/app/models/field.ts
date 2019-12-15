@@ -6,7 +6,7 @@ export class Field<T>{
     Max: T;
     Min: T;
 
-    constructor(name:string,required:boolean = false,value: T=null,max: T = null, min: T = null,id:number=0){
+    constructor(name:string,required:boolean = false,value: T =null,max: T = null, min: T = null,id:number=0){
         this.Id = id;
         this.Name = name;
         this.Required = required;

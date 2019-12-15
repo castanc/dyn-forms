@@ -4,11 +4,20 @@
         [type]="fUI.HtmlType"
         [placeholder]="fUI.placeholder" 
         [required]="f.Required" 
-        [(ngModel)]="f.Value">
+        (change)="onChange()"
+        (focusout)="onFocusOut()"
+        [(ngModel)]="DTOField.Value">
 
     <select *ngIf="fUI.HtmlType=='select'" [name]="f.Name"
             (change)="onSelectedItemChanged()"
-            [(ngModel)]="fUI.SelectedValue" >
+            [(ngModel)]="DTOField.Value" >
            <option *ngFor="let item of fUI.List" [value]="item.Id">{{item.Value}}</option> 
         </select>
-</div>
+
+    <img *ngIf="fUI.HtmlType=='img'" [name]="f.Name"
+        [src]="bs.ImageList[bs.Form.Fields[fUI.ImageFieldID]]" >
+
+        <img *ngIf="fUI.HtmlType=='img'" [name]="f.Name"
+        [src]="fUI.ImageSource" >
+
+    </div>

@@ -4,6 +4,7 @@ import { ListItem } from '../models/list-item'
 export interface IDataProvider {
 
     LoadFormList():Array<ListItem>;
+    LoadInfrastructureList():Array<ListItem>;
     LoadForm(formName: string):Form;
     SaveForm(formName: string):number;
     SaveAll():number;

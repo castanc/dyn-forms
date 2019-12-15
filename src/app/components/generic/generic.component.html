@@ -5,7 +5,11 @@
 <div >
     <div >
         <div >
-            <app-field *ngFor="let fUI of f.UI" [fUI]="fUI" [f]="bs.Form.GetField(fUI.FieldId)" ></app-field>
+            <app-field *ngFor="let fUI of f.UI" 
+            [fUI]="fUI" 
+            [f]="bs.Form.GetField(fUI.FieldId)" 
+            [DTOField] = "bs.Form.DTOFields[fUI.FieldId]"
+            ></app-field>
         </div>
     </div>
 </div>

@@ -28,10 +28,25 @@ export class BaseComponent implements OnInit {
 
   onSelectedItemChanged(formName: string)
   {
+    this.bs.SetUserDate(this.cDate.nativeElement.value,this.cTime.nativeElement.value);
     this.bs.LoadForm();
     if (this.bs.Form )
     {
-      this.bs.SetUserDate(this.cDate.nativeElement.value,this.cTime.nativeElement.value);
+      this.router.navigate(['create']);
+    }
+    else
+    {
+        throw new Error("Invalid Form")
+    }
+
+  }
+
+  createInfrastructureItem(id:number){
+    this.bs.SetUserDate(this.cDate.nativeElement.value,this.cTime.nativeElement.value);
+    this.bs.FormId = id;
+    this.bs.LoadInfrastructureForm();
+    if (this.bs.Form )
+    {
       this.router.navigate(['create']);
     }
     else

@@ -4,6 +4,7 @@ import { Field } from '../../models/field'
 import { FieldUI } from '../../models/fieldui'
 import { BackEndService } from '../../services/backend'
 import { Router } from '@angular/router';
+import { DTOField } from 'src/app/models/DTOField';
 
 @Component({
   selector: 'app-field',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 export class FieldComponent implements OnInit {
   @Input() f: Field<any>
   @Input() fUI: FieldUI;
+  @Input() DTOField: DTOField<any>;
 
   constructor(private bs: BackEndService, router: Router) {
   }
@@ -20,8 +22,50 @@ export class FieldComponent implements OnInit {
   ngOnInit() {
     if ( !this.f)
       this.f = this.bs.Form.GetField(this.fUI.IdField);
+    if ( !this.DTOField)
+      this.DTOField = this.bs.Form.DTOFields[this.f.Id];
 
-      console.log("field:",this.f);
+      //console.log("field:",this.f);
+      //console.log("DTOField:",this.DTOField);
+  }
+
+  getImage(imageFieldId:number):string {
+    //gets image or url from image list repository
+    return "";
+  }
+
+  onSelectedItemChanged(){
+
+  }
+
+  onChange()
+  {
+
+  }
+
+  addImageUrl()
+  {
+
+    if ( this.fUI.HtmlInputType.toLowerCase()=="url") // && this.fUI.ImageFieldId )
+    {
+      //TODO: NEITHER WAY THE IMAGE IS REFRESHED
+        this.bs.Form.Fields[this.fUI.ImageFieldId].Value = this.bs.AddImageList(this.DTOField.Value);
+        console.log("addImageUrl",this.fUI.ImageFieldId, this.DTOField.Value);
+        console.log("image field id:",this.bs.Form.Fields[this.fUI.ImageFieldId].Value);
+
+        this.fUI.ImageSource = this.DTOField.Value;
+        this.DTOField.Value = "";
+
+
+      }
+
+  }
+
+  onFocusOut()
+  {
+    //todo: use postprocess factory
+    //todo: use event emitter to impact other fields
+    this.addImageUrl();
   }
 
 }
