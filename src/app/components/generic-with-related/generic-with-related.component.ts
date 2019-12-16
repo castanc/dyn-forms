@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 })
 export class GenericWithRelatedComponent implements OnInit {
   f: Form;
+  itemId: number ;
 
   constructor(private bs: BackEndService, router: Router) {
     if ( bs.Form)
@@ -39,6 +40,11 @@ export class GenericWithRelatedComponent implements OnInit {
 
     }
 
+  }
+
+  onSelectedItemChanged()
+  {
+    
   }
 
 }
