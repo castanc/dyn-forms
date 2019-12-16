@@ -6,6 +6,7 @@ import { BackEndService } from '../../services/backend'
 import { Router } from '@angular/router';
 import { DTOField } from 'src/app/models/DTOField';
 
+
 @Component({
   selector: 'app-field',
   templateUrl: './field.component.html',
@@ -15,6 +16,7 @@ export class FieldComponent implements OnInit {
   @Input() f: Field<any>
   @Input() fUI: FieldUI;
   @Input() DTOField: DTOField<any>;
+
 
   constructor(private bs: BackEndService, router: Router) {
   }
@@ -61,7 +63,9 @@ export class FieldComponent implements OnInit {
   {
     //todo: use postprocess factory
     //todo: use event emitter to impact other fields
-    this.addImageUrl();
+    //this.addImageUrl();
+    this.bs.Form.FieldPostInput(this.f.Name,this.DTOField.Value);
+
   }
 
 }
