@@ -11,7 +11,7 @@ import { format } from 'url';
 
 export class Mock implements IDataProvider{
 
-    TotalStorage: number = 5*1024*1024;
+    TotalStorage: number = 10*1024*1024;
     FreeStorage: number = this.TotalStorage;
 
     Save<T>(key:string, obj: T):number{
@@ -57,7 +57,7 @@ export class Mock implements IDataProvider{
     }
 
 
-    private initFields(f: Form)
+    private initFields(f: Form):Form
     {
         let fId = new Field<number>("Id",false,0);
         f.AddFieldTyped<number>(fId)    ;
@@ -67,6 +67,8 @@ export class Mock implements IDataProvider{
 
         let fRecordType = new Field<number>("RecordType",true,0);
         f.AddFieldTyped<number>(fRecordType);
+
+        return f;
 
     }
     private loadFoodItemsMap(key:string):RelatedMap {
@@ -84,9 +86,9 @@ export class Mock implements IDataProvider{
     }
 
     private createFoodItemsForm():Form {
-        let f = new Form();
+        let f = this.initFields(new Form());
         f.Title = "Food Record";
-        this.initFields(f);
+       
         return f;
     }
 
@@ -95,26 +97,34 @@ export class Mock implements IDataProvider{
         let map = new Array<Map<number,any>>();
         let f = new Form();
         f = this.LoadForm(relatedName);
-        let rd =  new Array<Array<DTOField<any>>>();
-        rd = this.Load<Array<Array<DTOField<any>>>>(`infrastructure.${relatedName}`, rd);
-
-        for( let i = 0; i< rd.length; i++ ){
-            let m = new Map();
-            for( let j=0; j<f.Fields.length; j++){
-                m.set(f.Fields[j].Name,rd[i][j].Value);
+        if ( f )
+        {
+            f.RelatedList = new Array<ListItem>();
+            let rd =  new Array<Array<DTOField<any>>>();
+            rd = this.Load<Array<Array<DTOField<any>>>>(`infrastructure.${relatedName}`, rd);
+            if ( rd )
+            {
+                for( let i = 0; i< rd.length; i++ ){
+                    let m = new Map();
+                    for( let j=0; j<f.Fields.length; j++){
+                        m.set(f.Fields[j].Name,rd[i][j].Value);
+                    }
+                    map.push(m);
+                    f.RelatedList.push(new  ListItem(i,rd[i][1].Value));
+                }
             }
-            map.push(m);
         }
         return map;
     }
 
     private createFoodForm(formName: string):Form {
-        let f = new Form();
+        let f = this.initFields(new Form());
+        f.Route = "createRelated";
         f.Title = "Food Record";
         f.RelatedFormName = "FoodItem"
         
-        this.initFields(f);
         f.IgnoreFields = true;
+        f.Map= this.getRelatedMap(f.RelatedFormName)
 
         let fFoodItemId = new Field<number>("FoodItemId",false,0);
         f.AddFieldTyped<number>(fFoodItemId);
@@ -132,6 +142,27 @@ export class Mock implements IDataProvider{
         //todo define fields to be populated from related record
         //in this case is foodItem: calories,fat,sugar,sodium,cant
         //calculation= cant*(r.cant/r.calories, ... fat sugar doium)
+
+        let fCalories = new Field<number>("Calories");
+        f.AddFieldTyped<number>(fCalories);
+        f.AddFieldUI(new FieldUI(fCalories.Id,fCalories.Name,"input","number",4));
+
+        let fFat = new Field<number>("Fat");
+        f.AddFieldTyped<number>(fFat);
+        f.AddFieldUI(new FieldUI(fFat.Id,fFat.Name,"input","number",4));
+
+        let fSugar = new Field<number>("Sugar");
+        f.AddFieldTyped<number>(fSugar);
+        f.AddFieldUI(new FieldUI(fSugar.Id,fSugar.Name,"input","number",4));
+
+        let fSodium = new Field<number>("Sodium");
+        f.AddFieldTyped<number>(fSodium);
+        f.AddFieldUI(new FieldUI(fSodium.Id,fSodium.Name,"input","number",4));
+
+
+        let fImageID = new Field<number>("ImageID",false,0);
+        f.AddFieldTyped<number>(fImageID);
+
         f.AddFirstRow();
 
         return f;
@@ -142,7 +173,6 @@ export class Mock implements IDataProvider{
         f.Name = formName;
         f.Infrastructure = true;
         f.Title = "Food Items";
-        //this.initFields(f);
 
         let fId = new Field<number>("Id");
         f.AddFieldTyped<number>(fId);
@@ -206,10 +236,9 @@ export class Mock implements IDataProvider{
     }
 
     private createExeForm(formName: string):Form {
-        let f = new Form();
+        let f = this.initFields(new Form());
         f.Name = formName;
         f.Title = "Exercise Record";
-        this.initFields(f);
 
         let fDistance = new Field<number>("Distance",true,2000,100,10000);
         f.AddFieldTyped<number>(fDistance);
@@ -275,6 +304,8 @@ export class Mock implements IDataProvider{
             return this.createExeForm(formName);
         else if ( formName.toLowerCase() == "drug")
             return this.createDrugForm(formName);
+        else if ( formName.toLocaleLowerCase()=="food")
+            return this.createFoodForm(formName);
         else if ( formName.toLocaleLowerCase()=="fooditem")
             return this.createFoodItemForm(formName);
         return null;
