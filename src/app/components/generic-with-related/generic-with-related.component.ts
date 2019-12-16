@@ -10,27 +10,20 @@ import { BackEndService } from '../../services/backend'
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-generic',
-  templateUrl: './generic.component.html',
-  styleUrls: ['./generic.component.css']
+  selector: 'app-generic-with-related',
+  templateUrl: './generic-with-related.component.html',
+  styleUrls: ['./generic-with-related.component.css']
 })
-export class GenericComponent implements OnInit {
+export class GenericWithRelatedComponent implements OnInit {
   f: Form;
 
   constructor(private bs: BackEndService, router: Router) {
     if ( bs.Form)
     {
       this.f = bs.Form;
-      console.log("form:",this.f);
     }
     else
       router.navigate(['']);
-
-   }
-
-   private getField(id:number):Field<any>
-   {
-     return this.bs.Form.GetField(id);
    }
 
   ngOnInit() {

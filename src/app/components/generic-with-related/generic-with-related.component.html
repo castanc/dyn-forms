@@ -1,0 +1,20 @@
+
+<form (ngSubmit)="onSubmit(f2)" #f2="ngForm" >
+    <h4>{{f.Title}}</h4>
+    <br/>
+    <div >
+        <div >
+            <div >
+                <app-field *ngFor="let fUI of f.UI" 
+                [fUI]="fUI" 
+                [f]="bs.Form.GetField(fUI.FieldId)" 
+                [DTOField] = "bs.Form.DTOFields[fUI.FieldId]"
+                ></app-field>
+            </div>
+        </div>
+    </div>
+    <button [disabled]="!f2.valid" type="submit">Submit</button>
+    <button type="reset">Reset</button>
+    <button class="btn btn-primary"  type="button">Cancel</button>
+    </form>
+    

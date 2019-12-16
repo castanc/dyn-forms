@@ -46,17 +46,13 @@ export class FieldComponent implements OnInit {
   addImageUrl()
   {
 
-    if ( this.fUI.HtmlInputType.toLowerCase()=="url") // && this.fUI.ImageFieldId )
+    if ( this.DTOField.Value && this.DTOField.Value != "" &&  this.fUI.HtmlInputType.toLowerCase()=="url") 
     {
       //TODO: NEITHER WAY THE IMAGE IS REFRESHED
         this.bs.Form.Fields[this.fUI.ImageFieldId].Value = this.bs.AddImageList(this.DTOField.Value);
-        console.log("addImageUrl",this.fUI.ImageFieldId, this.DTOField.Value);
-        console.log("image field id:",this.bs.Form.Fields[this.fUI.ImageFieldId].Value);
-
-        this.fUI.ImageSource = this.DTOField.Value;
+        console.log("url saved:",this.bs.ImageList.length);
+        //this.fUI.ImageSource = this.DTOField.Value;
         this.DTOField.Value = "";
-
-
       }
 
   }

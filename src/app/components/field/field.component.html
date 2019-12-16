@@ -1,5 +1,10 @@
 <div>
     <label *ngIf="fUI.Label!=''">{{fUI.Label}}</label>
+
+    <div *ngIf="fUI.Readonly || fUI.HtmlType=='text'" [id]="f.Name">
+        {{DTOField.Value}}
+    </div>
+
     <input *ngIf="fUI.HtmlType=='input'" [name]="f.Name"  [id] = "f.Name"
         [type]="fUI.HtmlType"
         [placeholder]="fUI.placeholder" 
@@ -16,8 +21,5 @@
 
     <img *ngIf="fUI.HtmlType=='img'" [name]="f.Name"
         [src]="bs.ImageList[bs.Form.Fields[fUI.ImageFieldID]]" >
-
-        <img *ngIf="fUI.HtmlType=='img'" [name]="f.Name"
-        [src]="fUI.ImageSource" >
 
     </div>
