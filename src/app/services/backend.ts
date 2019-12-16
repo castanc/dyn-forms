@@ -7,6 +7,7 @@ import { ComboItem } from '../models/combo-item'
 import { ListItem } from '../models/list-item'
 import { Time } from '@angular/common';
 import { DTOTable } from '../models/DTOTable'
+import { DTOField } from '../models/DTOField'
 
 @Injectable()
 export class BackEndService {
@@ -24,6 +25,8 @@ export class BackEndService {
     TimeString = "";
     TotalRows: number = 0;
     ImageList: Array<ListItem> = [];
+    Rows: Array<Array<DTOField<any>>> = [];
+    Message : string = "";
 
     DA: IDataProvider;
     dp: string;
@@ -34,17 +37,57 @@ export class BackEndService {
 
     OnInit(){
         //todo: load infrastructure data. imagelist, items, etc
-        let il = localStorage.getItem("imageLIst");
-        if ( il )
-            this.ImageList = JSON.parse(il);
-        else
-            this.ImageList = new Array<ListItem>();
+        this.ImageList = this.DA.Load<Array<ListItem>>("image-list",this.ImageList);
+        if ( !this.ImageList  )
+           this.ImageList = new Array<ListItem>();
+
+        this.Rows = this.DA.Load<Array<Array<DTOField<any>>>>("data",this.Rows);
+        if ( !this.Rows)
+            this.Rows = new  Array<Array<DTOField<any>>>();
+        
     }
 
     OnDestroy(){
-        //todo: save infrastructure data
-        let il = JSON.stringify(this.ImageList);
-        localStorage.setItem("imageList",il);
+        this.DA.Save<Array<ListItem>>("image-list",this.ImageList);
+        this.DA.Save< Array<Array<DTOField<any>>>>("data",this.Rows);
+    }
+
+    SaveForm(f: Form):number
+    {
+        let result = 0;
+        this.Form = f;
+        if ( !this.Rows )
+            this.Rows = new  Array<Array<DTOField<any>>>();
+
+        if ( f.Rows.length > 0)
+        {
+            if ( f.Infrastructure)
+            {
+                let ri = new Array<Array<DTOField<any>>>();
+                ri = this.DA.Load<Array<Array<DTOField<any>>>>(`infrastructure.${f.Name}`,ri);
+                if ( !ri )
+                    ri = new Array<Array<DTOField<any>>>();
+
+                //asigns ids    
+                for( let i = 0; i++; i< f.Rows.length){
+                    f.Rows[i][0].Value = ri.length + i;
+                }
+                ri.concat(f.Rows);
+                this.DA.Save<Array<Array<DTOField<any>>>>(`infrastructure.${f.Name}`, ri);
+            }
+            else
+            {
+                //asigns ids    
+                for( let i = 0; i++; i< f.Rows.length){
+                    f.Rows[i][0].Value = this.Rows.length + i;
+                }
+                this.Rows = this.Rows.concat(f.Rows);
+                result = this.DA.Save<Array<Array<DTOField<any>>>>("data",this.Rows);
+            }
+            f.Rows = new  Array<Array<DTOField<any>>>();
+            f.AddFirstRow();
+    }
+        return result;
     }
 
     public SetUserDate(d: string, t: string )

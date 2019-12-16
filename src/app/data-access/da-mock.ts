@@ -7,8 +7,40 @@ import { Time } from '@angular/common';
 import { ListItem } from '../models/list-item';
 import { DTOField} from '../models/DTOField'
 import { RelatedMap } from '../models/related-map';
+import { format } from 'url';
 
 export class Mock implements IDataProvider{
+
+    TotalStorage: number = 5*1024*1024;
+    FreeStorage: number = this.TotalStorage;
+
+    Save<T>(key:string, obj: T):number{
+        let serialized = JSON.stringify(obj);
+        this.FreeStorage -= serialized.length;
+        localStorage.setItem(key,serialized);
+        console.log("Save:",key,"Length:",serialized.length, "Free:",this.FreeStorage);
+        return this.FreeStorage;
+    }
+
+    Load<T>(key:string, obj: T):T{
+        let serialized = localStorage.getItem(key);
+        if ( serialized )
+            obj = JSON.parse(serialized);
+        else obj = null;
+        return obj;
+   }
+
+   Remove(key:string):number{
+       let result = 0;
+       let serialized = localStorage.getItem(key);
+       if ( serialized )
+       {
+            this.FreeStorage += serialized.length;
+            localStorage.removeItem(key);
+       }
+       return result;
+   }
+
     LoadFormList(): Array<ListItem> {
         let arr = new Array<ListItem>();
         arr.push(new ListItem(0,"Food"));
@@ -58,38 +90,57 @@ export class Mock implements IDataProvider{
         return f;
     }
 
-    private createFoodForm():Form {
+    getRelatedMap(relatedName: string):Array<Map<number,any>>
+    {
+        let map = new Array<Map<number,any>>();
+        let f = new Form();
+        f = this.LoadForm(relatedName);
+        let rd =  new Array<Array<DTOField<any>>>();
+        rd = this.Load<Array<Array<DTOField<any>>>>(`infrastructure.${relatedName}`, rd);
+
+        for( let i = 0; i< rd.length; i++ ){
+            let m = new Map();
+            for( let j=0; j<f.Fields.length; j++){
+                m.set(f.Fields[j].Name,rd[i][j].Value);
+            }
+            map.push(m);
+        }
+        return map;
+    }
+
+    private createFoodForm(formName: string):Form {
         let f = new Form();
         f.Title = "Food Record";
+        f.RelatedFormName = "FoodItem"
+        
         this.initFields(f);
         f.IgnoreFields = true;
 
-        let fFoodItem = new Field<number>("FoodItem",false,0);
-        f.AddFieldTyped<number>(fFoodItem);
-        let fUIMood = new FieldUI(fFoodItem.Id,fFoodItem.Name,"select");
-        fUIMood.RelatedMap = "food-items";
-        f.Maps.push(this.loadFoodItemsMap(fUIMood.RelatedMap));
+        let fFoodItemId = new Field<number>("FoodItemId",false,0);
+        f.AddFieldTyped<number>(fFoodItemId);
 
-        fUIMood.List = this.loadFoodItems();
-        f.AddFieldUI(fUIMood);
+        let fDescr = new Field<string>("Description",true,"");
+        f.AddFieldTyped<string>(fDescr);
+        let fUIDescr = new FieldUI(fDescr.Id,fDescr.Name,"text");
+        f.AddFieldUI(fUIDescr);
 
+        let fCant = new Field<number>("Cantidad",true,0,1,1000);
+        f.AddFieldTyped<number>(fCant);
+        let fUICant = new FieldUI(fCant.Id,fCant.Name,"input","number",4);
+        f.AddFieldUI(fUICant);
+
+        //todo define fields to be populated from related record
+        //in this case is foodItem: calories,fat,sugar,sodium,cant
+        //calculation= cant*(r.cant/r.calories, ... fat sugar doium)
         f.AddFirstRow();
-
-        /*
-            food item selector
-            mao with related data
-
-            child tabular form of
-                fooditemid
-                cant
-                plus related data
-        */
 
         return f;
     }
 
-    private createFoodItemForm(){
+    private createFoodItemForm(formName: string){
         let f = new Form();
+        f.Name = formName;
+        f.Infrastructure = true;
         f.Title = "Food Items";
         //this.initFields(f);
 
@@ -154,8 +205,9 @@ export class Mock implements IDataProvider{
 
     }
 
-    private createExeForm():Form {
+    private createExeForm(formName: string):Form {
         let f = new Form();
+        f.Name = formName;
         f.Title = "Exercise Record";
         this.initFields(f);
 
@@ -185,8 +237,9 @@ export class Mock implements IDataProvider{
         return f;
     }
 
-    private createDrugForm():Form {
+    private createDrugForm(formName: string):Form {
         let f = new Form();
+        f.Name = formName;
         f.Title = "Drug Record";
 
         let fId = new Field<number>("Id",false,0);
@@ -219,11 +272,11 @@ export class Mock implements IDataProvider{
 
     LoadForm(formName: string): import("../models/form").Form {
         if ( formName.toLowerCase() == "exercise")
-            return this.createExeForm();
+            return this.createExeForm(formName);
         else if ( formName.toLowerCase() == "drug")
-            return this.createDrugForm();
+            return this.createDrugForm(formName);
         else if ( formName.toLocaleLowerCase()=="fooditem")
-            return this.createFoodItemForm();
+            return this.createFoodItemForm(formName);
         return null;
     }
     

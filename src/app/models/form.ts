@@ -10,6 +10,7 @@ import { RelatedMap } from './related-map'
 export class Form{
     Id: number = 0;
     RecordType: number = 0;
+    Name = "";
     Fecha: Date;
     IsTabular: boolean = false;
     Title: string = "";
@@ -20,6 +21,8 @@ export class Form{
     CurrentRow: number = 0;
     ChildForm: string;
     IgnoreFields = false;
+    Infrastructure = false;
+    RelatedFormName: string;
 
     get Fields(){ return this.fields;}
     get UI() { return this.ui;}

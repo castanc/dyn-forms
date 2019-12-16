@@ -8,7 +8,8 @@ import { AppComponent } from './app.component';
 import { GenericComponent } from './components/generic/generic.component';
 import { BaseComponent } from './components/base/base.component';
 import { BackEndService } from './services/backend';
-import { FieldComponent } from './components/field/field.component'
+import { FieldComponent } from './components/field/field.component';
+import { GenericWithRelatedComponent } from './components/generic-with-related/generic-with-related.component'
 
 const appRoutes: Routes = [
   { path: '', component: BaseComponent },
@@ -21,7 +22,8 @@ const appRoutes: Routes = [
     AppComponent,
     GenericComponent,
     BaseComponent,
-    FieldComponent
+    FieldComponent,
+    GenericWithRelatedComponent
   ],
   imports: [
     BrowserModule,
