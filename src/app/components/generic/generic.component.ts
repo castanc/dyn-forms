@@ -20,6 +20,7 @@ export class GenericComponent implements OnInit {
   constructor(private bs: BackEndService, router: Router) {
     if ( bs.Form)
     {
+      this.bs.Form.bs = this.bs;
       this.f = bs.Form;
       console.log("form:",this.f);
     }
