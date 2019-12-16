@@ -1,4 +1,9 @@
-
+<label>Item</label>
+<select  [name]="selector"
+(change)="onSelectedItemChanged()"
+[(ngModel)]="itemId" >
+<option *ngFor="let item of f.RelatedList" [value]="item.Id">{{item.Value}}</option> 
+</select>
 <form (ngSubmit)="onSubmit(f2)" #f2="ngForm" >
     <h4>{{f.Title}}</h4>
     <br/>
