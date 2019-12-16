@@ -32,7 +32,8 @@ export class BaseComponent implements OnInit {
     this.bs.LoadForm();
     if (this.bs.Form )
     {
-      this.router.navigate(['create']);
+      console.log("routing to " + this.bs.Form.Route);
+      this.router.navigate([this.bs.Form.Route]);
     }
     else
     {
