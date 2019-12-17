@@ -24,5 +24,7 @@ name = "formName">
     <option *ngFor="let item of bs.FormNames" [selected]="item.Id == bs.FormName" [value]="item.Id">{{item.Value}}</option> 
 </select>
 
-
+<button type="button"
+(click)="onSelectedItemChanged(bs.FormId)"
+>Go</button>
 </form>
