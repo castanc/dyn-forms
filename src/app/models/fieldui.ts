@@ -31,8 +31,7 @@ export class FieldUI{
         htmlSelectId:string = "",
         labelMode:string="top",
         relatedMap:string = null,
-        readOnly: boolean = false
-
+        readOnly: boolean = false,
         )
     {
         this.IdField = idField;
