@@ -15,15 +15,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./generic-with-related.component.css']
 })
 export class GenericWithRelatedComponent implements OnInit {
-  f: Form;
-  itemId: number ;
+  ItemId: number ;
 
   constructor(private bs: BackEndService, router: Router) {
-    if ( bs.Form)
-    {
-      this.f = bs.Form;
-    }
-    else
+    if ( !bs.Form)
       router.navigate(['']);
    }
 
@@ -33,7 +28,7 @@ export class GenericWithRelatedComponent implements OnInit {
   onSubmit(form: NgForm){
     if (form.valid)
     {
-      this.bs.SaveForm(this.f);
+      this.bs.SaveForm();
     }
     else
     {
@@ -44,7 +39,7 @@ export class GenericWithRelatedComponent implements OnInit {
 
   onSelectedItemChanged()
   {
-    
+      this.bs.Form.CurrentRRow = this.ItemId;
   }
 
 }
