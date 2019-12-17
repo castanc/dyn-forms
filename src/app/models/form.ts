@@ -36,12 +36,19 @@ export class Form{
        this.CurrentRRId = this.RRows[this.currentRRow][0].Value;
 
 
-       console.log(this.RFieldsMap);
+       console.log("rFielkds",this.rFields);
+       if ( this.RFieldsMap.size == 0 ){
+            this.RFieldsMap = new Map<string,number>();
+            for(let f in this.rFields){
+                this.RFieldsMap.set(this.rFields[f].Name, this.rFields[f].Id);
+            }
+       }
        for( let f in this.UI)
        {
-           console.log("ui[f]",f,this.ui[f],this.RRows[this.currentRRow][this.RFieldsMap.get(this.ui[f].RelatedMap)]);
+           console.log("ui[f]",f,this.ui[f],this.RRows[this.currentRRow][this.RFieldsMap.get(this.ui[f].RelatedMap)].Value);
             if ( this.ui[f].RelatedMap && this.ui[f].RelatedMap != "" )
-                this.dtoFields[this.FieldsMap.get(this.ui[f].Name)].Value = this.RRows[this.currentRRow][this.RFieldsMap.get(this.ui[f].RelatedMap)];
+                this.DTOFields[this.FieldsMap.get(this.ui[f].Name)].Value = 
+                    this.RRows[this.currentRRow][this.RFieldsMap.get(this.ui[f].RelatedMap)].Value;
        }
     }
 
