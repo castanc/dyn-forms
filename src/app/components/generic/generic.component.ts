@@ -15,16 +15,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./generic.component.css']
 })
 export class GenericComponent implements OnInit {
-  f: Form;
 
   constructor(private bs: BackEndService, router: Router) {
-    if ( bs.Form)
-    {
-      this.bs.Form.bs = this.bs;
-      this.f = bs.Form;
-      console.log("form:",this.f);
-    }
-    else
+    if ( !bs.Form)
       router.navigate(['']);
 
    }
@@ -40,7 +33,7 @@ export class GenericComponent implements OnInit {
   onSubmit(form: NgForm){
     if (form.valid)
     {
-      this.bs.SaveForm(this.f);
+      this.bs.SaveForm();
     }
     else
     {
