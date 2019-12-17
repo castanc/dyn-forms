@@ -26,9 +26,20 @@ export class BackEndService {
     TotalRows: number = 0;
     ImageList: Array<ListItem> = [];
     Rows: Array<Array<DTOField<any>>> = [];
+   
     Message : string = "";
 
-    DA: IDataProvider;
+    da: IDataProvider;
+    get DA()
+    {
+        if ( ! this.da)
+            this.da = this.dataProviderFactory(this.dp);
+        return this.da;
+    }
+
+    set DA(value){
+        this.da = value;
+    }
     dp: string;
 
     get UserDate(){
@@ -52,40 +63,46 @@ export class BackEndService {
         this.DA.Save< Array<Array<DTOField<any>>>>("data",this.Rows);
     }
 
-    SaveForm(f: Form):number
+    SaveForm():number
     {
         let result = 0;
-        this.Form = f;
         if ( !this.Rows )
             this.Rows = new  Array<Array<DTOField<any>>>();
 
-        if ( f.Rows.length > 0)
+        if ( this.Form.Rows.length > 0)
         {
-            if ( f.Infrastructure)
+            if ( this.Form.Infrastructure)
             {
                 let ri = new Array<Array<DTOField<any>>>();
-                ri = this.DA.Load<Array<Array<DTOField<any>>>>(`infrastructure.${f.Name}`,ri);
+                ri = this.DA.Load<Array<Array<DTOField<any>>>>(`infrastructure.${this.Form.Name}`,ri);
                 if ( !ri )
                     ri = new Array<Array<DTOField<any>>>();
 
-                //asigns ids    
-                for( let i = 0; i++; i< f.Rows.length){
-                    f.Rows[i][0].Value = ri.length + i;
+                //assigns ids    
+                let i = ri.length;
+                for(let r in this.Form.Rows)
+                {
+                    this.Form.Rows[r][0].Value= i;
+                    i++;
+                    ri.push(this.Form.Rows[r]);
                 }
-                ri.concat(f.Rows);
-                this.DA.Save<Array<Array<DTOField<any>>>>(`infrastructure.${f.Name}`, ri);
+                console.log("ri after save:",ri);
+                this.DA.Save<Array<Array<DTOField<any>>>>(`infrastructure.${this.Form.Name}`, ri);
             }
             else
             {
-                //asigns ids    
-                for( let i = 0; i++; i< f.Rows.length){
-                    f.Rows[i][0].Value = this.Rows.length + i;
+                let i = this.Rows.length;
+                for(let r in this.Form.Rows)
+                {
+                    this.Form.Rows[r][0].Value= i;
+                    i++;
+                    this.Rows.push(this.Form.Rows[r]);
                 }
-                this.Rows = this.Rows.concat(f.Rows);
                 result = this.DA.Save<Array<Array<DTOField<any>>>>("data",this.Rows);
+                console.log("data after save:",this.Rows);
             }
-            f.Rows = new  Array<Array<DTOField<any>>>();
-            f.AddFirstRow();
+            this.Form.Rows = new  Array<Array<DTOField<any>>>();
+            this.Form.AddFirstRow();
     }
         return result;
     }
@@ -96,7 +113,7 @@ export class BackEndService {
         this.TimeString = t;
 
         this.userDate= new Date(`${d} ${t}`);
-        console.log("date from string:", this.userDate);
+        console.log("date from string:", d,t,this.userDate);
 
     }
 
@@ -111,7 +128,7 @@ export class BackEndService {
 
     public LoadForm():void {
         this.FormName = this.FormNames.filter(x=>x.Id == this.FormId)[0].Value;
-        console.log("Load Form,formName:"  , this.FormName, this.FormId);
+        console.log("Load Form, formName:"  , this.FormName, this.FormId);
         this.Form = this.DA.LoadForm(this.FormName);
         if ( this.Form)
         {
@@ -133,6 +150,10 @@ export class BackEndService {
         }
     }
 
+    public FieldPostInput(fieldName: string,value:any):void{
+        this.Form.FieldPostInput(fieldName,value);
+    }
+
     private dataProviderFactory(name:string):IDataProvider{
         let da = null;
         if ( name.toUpperCase() == "MOCK")
@@ -142,11 +163,15 @@ export class BackEndService {
     }
 
     constructor() {
+        //todo: get this from configuration
         this.dp = "MOCK";
-        if ( ! this.DA)
-            this.DA = this.dataProviderFactory(this.dp);
+        this.DA = this.dataProviderFactory(this.dp);
         this.FormNames = this.DA.LoadFormList();
         this.InfrastructureNames = this.DA.LoadInfrastructureList();
+    }
+
+    Load<T>(key:string, obj: T):T{
+        return this.DA.Load<T>(key,obj);
     }
 
 }
