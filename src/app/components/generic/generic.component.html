@@ -1,11 +1,11 @@
 
 <form (ngSubmit)="onSubmit(f2)" #f2="ngForm" >
-<h4>{{f.Title}}</h4>
+<h4>{{bs.Form.Title}}</h4>
 <br/>
 <div >
     <div >
         <div >
-            <app-field *ngFor="let fUI of f.UI" 
+            <app-field *ngFor="let fUI of bs.Form.UI" 
             [fUI]="fUI" 
             [f]="bs.Form.GetField(fUI.FieldId)" 
             [DTOField] = "bs.Form.DTOFields[fUI.FieldId]"
