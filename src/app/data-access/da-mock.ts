@@ -13,6 +13,7 @@ export class Mock implements IDataProvider{
 
     TotalStorage: number = 10*1024*1024;
     FreeStorage: number = this.TotalStorage;
+    form: Form;
 
     Save<T>(key:string, obj: T):number{
         let serialized = JSON.stringify(obj);
@@ -49,6 +50,25 @@ export class Mock implements IDataProvider{
         return arr; 
     }   
 
+    loadRelatedRows(relatedFormName: string ):Array<Array<DTOField<any>>>{
+        let rrows = new Array<Array<DTOField<any>>>();
+        console.log("loadRelatedRows() RRows:",relatedFormName);
+        rrows= new Array<Array<DTOField<any>>>();
+        rrows = this.Load<Array<Array<DTOField<any>>>>(`infrastructure.${relatedFormName}`, rrows);
+        if(!rrows)
+            rrows= new Array<Array<DTOField<any>>>();
+
+        return rrows;
+    }
+
+    public LoadRelatedFields(relatedFormName: string):Array<Field<any>>{
+        let rf = this.LoadForm(relatedFormName);
+        console.log("load related form:",rf)    ;
+        return rf.Fields;
+    }
+
+
+
     LoadInfrastructureList():Array<ListItem>{
         let arr = new Array<ListItem>();
         arr.push(new ListItem(0,"FoodItem"));
@@ -57,8 +77,9 @@ export class Mock implements IDataProvider{
     }
 
 
-    private initFields(f: Form):Form
+    private initFields():Form
     {
+        let f = new Form();
         let fId = new Field<number>("Id",false,0);
         f.AddFieldTyped<number>(fId)    ;
 
@@ -71,22 +92,9 @@ export class Mock implements IDataProvider{
         return f;
 
     }
-    private loadFoodItemsMap(key:string):RelatedMap {
-        let rm = new RelatedMap(key);
-
-        return rm;
-    }
-
-    private loadFoodItems():Array<ListItem> {
-        let arr = new Array<ListItem>();
-        arr.push(new ListItem(0,"Arroz"));
-        arr.push(new ListItem(1,"Carne"));
-        arr.push(new ListItem(2,"Leche"));
-        return arr;
-    }
 
     private createFoodItemsForm():Form {
-        let f = this.initFields(new Form());
+        let f = this.initFields();
         f.Title = "Food Record";
        
         return f;
@@ -118,7 +126,7 @@ export class Mock implements IDataProvider{
     }
 
     private createFoodForm(formName: string):Form {
-        let f = this.initFields(new Form());
+        let f = this.initFields();
         f.Route = "createRelated";
         f.Title = "Food Record";
         f.RelatedFormName = "FoodItem"
@@ -132,11 +140,13 @@ export class Mock implements IDataProvider{
         let fDescr = new Field<string>("Description",true,"");
         f.AddFieldTyped<string>(fDescr);
         let fUIDescr = new FieldUI(fDescr.Id,fDescr.Name,"text");
+        fUIDescr.RelatedMap = fUIDescr.Name;
         f.AddFieldUI(fUIDescr);
 
         let fCant = new Field<number>("Cantidad",true,0,1,1000);
         f.AddFieldTyped<number>(fCant);
         let fUICant = new FieldUI(fCant.Id,fCant.Name,"input","number",4);
+        fUICant.RelatedMap = fUICant.Name;
         f.AddFieldUI(fUICant);
 
         //todo define fields to be populated from related record
@@ -145,24 +155,35 @@ export class Mock implements IDataProvider{
 
         let fCalories = new Field<number>("Calories");
         f.AddFieldTyped<number>(fCalories);
-        f.AddFieldUI(new FieldUI(fCalories.Id,fCalories.Name,"input","number",4));
+        let fUIdCalories = new FieldUI(fCalories.Id,fCalories.Name,"input","number",4);
+        fUIdCalories.RelatedMap = fUIdCalories.Name;
+        f.AddFieldUI(fUIdCalories);
 
         let fFat = new Field<number>("Fat");
         f.AddFieldTyped<number>(fFat);
-        f.AddFieldUI(new FieldUI(fFat.Id,fFat.Name,"input","number",4));
+        let fUIFat = new FieldUI(fFat.Id,fFat.Name,"input","number",4);
+        fUIFat.RelatedMap = fUIFat.Name;
+        f.AddFieldUI(fUIFat);
 
         let fSugar = new Field<number>("Sugar");
         f.AddFieldTyped<number>(fSugar);
-        f.AddFieldUI(new FieldUI(fSugar.Id,fSugar.Name,"input","number",4));
+        let fUISugar =  new FieldUI(fSugar.Id,fSugar.Name,"input","number",4);
+        fUISugar.RelatedMap = fUISugar.Name;
+        f.AddFieldUI(fUISugar);
 
         let fSodium = new Field<number>("Sodium");
         f.AddFieldTyped<number>(fSodium);
-        f.AddFieldUI(new FieldUI(fSodium.Id,fSodium.Name,"input","number",4));
+        let fUISodium =  new FieldUI(fSodium.Id,fSodium.Name,"input","number",4);
+        fUISodium.RelatedMap = fUISodium.Name;
+        f.AddFieldUI(fUISodium);
 
 
         let fImageID = new Field<number>("ImageID",false,0);
         f.AddFieldTyped<number>(fImageID);
 
+        let fUIImageId = new FieldUI(fImageID.Id,fImageID.Name,"input","hidden",4);
+        fUIImageId.RelatedMap = fUIImageId.Name;
+        f.AddFieldUI(fUISodium);
         f.AddFirstRow();
 
         return f;
@@ -236,7 +257,7 @@ export class Mock implements IDataProvider{
     }
 
     private createExeForm(formName: string):Form {
-        let f = this.initFields(new Form());
+        let f = this.initFields();
         f.Name = formName;
         f.Title = "Exercise Record";
 
@@ -301,12 +322,25 @@ export class Mock implements IDataProvider{
 
     LoadForm(formName: string): import("../models/form").Form {
         if ( formName.toLowerCase() == "exercise")
-            return this.createExeForm(formName);
+        {
+            this.form = this.createExeForm(formName);
+            return this.form;
+        }
         else if ( formName.toLowerCase() == "drug")
             return this.createDrugForm(formName);
-        else if ( formName.toLocaleLowerCase()=="food")
-            return this.createFoodForm(formName);
-        else if ( formName.toLocaleLowerCase()=="fooditem")
+        else if ( formName.toLowerCase()=="food")
+        {
+            this.form = this.createFoodForm(formName);
+            console.log("loadingf food. related form:",this.form.RelatedFormName);
+            if ( this.form.RelatedFormName != "" )
+            {
+                this.form.RRows = this.loadRelatedRows(this.form.RelatedFormName);
+                this.form.rFields = this.LoadRelatedFields(this.form.RelatedFormName);
+                console.log("rfields:", this.form.rFields);
+            }
+            return this.form;
+        }
+        else if ( formName.toLowerCase()=="fooditem")
             return this.createFoodItemForm(formName);
         return null;
     }
