@@ -64,7 +64,7 @@ export class FieldComponent implements OnInit {
     //todo: use postprocess factory
     //todo: use event emitter to impact other fields
     //this.addImageUrl();
-    this.bs.Form.FieldPostInput(this.f.Name,this.DTOField.Value);
+    this.bs.FieldPostInput(this.f.Name,this.DTOField.Value);
 
   }
 
