@@ -173,6 +173,7 @@ export class Mock implements IDataProvider{
 
         let fSodium = new Field<number>("Sodium");
         f.AddFieldTyped<number>(fSodium);
+
         let fUISodium =  new FieldUI(fSodium.Id,fSodium.Name,"input","number",4);
         fUISodium.RelatedMap = fUISodium.Name;
         f.AddFieldUI(fUISodium);
@@ -183,7 +184,7 @@ export class Mock implements IDataProvider{
 
         let fUIImageId = new FieldUI(fImageID.Id,fImageID.Name,"input","hidden",4);
         fUIImageId.RelatedMap = fUIImageId.Name;
-        f.AddFieldUI(fUISodium);
+        f.AddFieldUI(fUIImageId);
         f.AddFirstRow();
 
         return f;
