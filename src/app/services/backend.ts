@@ -101,9 +101,9 @@ export class BackEndService {
                 result = this.DA.Save<Array<Array<DTOField<any>>>>("data",this.Rows);
                 console.log("data after save:",this.Rows);
             }
-            this.Form.Rows = new  Array<Array<DTOField<any>>>();
-            this.Form.AddFirstRow();
-    }
+        }
+        this.Form.Rows = new  Array<Array<DTOField<any>>>();
+        this.Form.AddFirstRow();
         return result;
     }
 
