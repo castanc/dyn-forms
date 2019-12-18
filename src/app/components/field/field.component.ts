@@ -22,6 +22,8 @@ export class FieldComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    //todo: this is not required but if removed binding stops working
     if ( !this.f)
       this.f = this.bs.Form.GetField(this.fUI.IdField);
     if ( !this.DTOField)
