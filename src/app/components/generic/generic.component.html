@@ -7,8 +7,8 @@
         <div >
             <app-field *ngFor="let fUI of bs.Form.UI" 
             [fUI]="fUI" 
-            [f]="bs.Form.GetField(fUI.FieldId)" 
-            [DTOField] = "bs.Form.DTOFields[fUI.FieldId]"
+            [f]="bs.Form.GetField(fUI.IdField)" 
+            [DTOField] = "bs.Form.GetDTOField(fUI.Id)"
             ></app-field>
         </div>
     </div>
