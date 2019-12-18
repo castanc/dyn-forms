@@ -121,7 +121,30 @@ export class Form{
     }
 
     GetField(id:number):Field<any>{
-        return this.fields.filter(x => x.Id == id)[0];
+        let f = this.fields.filter(x => x.Id == id)[0];
+        if ( !f)
+        {
+            console.log("GetField|() NOT FOUND. id:",id, this.fields);
+        }
+        return f;
+    }
+
+    //TODO: Try to eliminate DTOField, and use FIelds[].Value
+    GetDTOField(id:number):DTOField<any>{
+        //console.log( "GetDTOField():",id,this.ui, this.DTOFields);
+        if ( !this.DTOFields)
+        {
+            this.Rows = new  Array<Array<DTOField<any>>>();
+            this.AddFirstRow();
+            console.log("GetDTOField|() id:",id, this.DTOFields,this.Fields, this.Rows);
+        }
+        if ( id < this.DTOFields.length)
+        {
+            if ( this.ui[id].IdField< this.DTOFields.length)
+                return this.DTOFields[this.ui[id].IdField];
+        }
+        console.log("GetDTOField|() NOT FOUND. id:",id, this.DTOFields,this.Fields);
+        return new DTOField<string>();
     }
 
     AddFieldTyped<T>(f: Field<T>){
