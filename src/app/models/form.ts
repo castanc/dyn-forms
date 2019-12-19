@@ -8,7 +8,7 @@ import { DTOField } from './DTOField'
 import { TypeofExpr } from '@angular/compiler'
 import { RelatedMap } from './related-map'
 import { HookFactory } from '../hooks/hook-factory'
-import { IPostInput } from '../hooks/post-input-interface'
+import { IHook } from '../hooks/hook-interface'
 import { BackEndService } from '../services/backend'
 
 export class Form{
@@ -26,6 +26,7 @@ export class Form{
     RRows: Array<Array<DTOField<any>>> = [];
     FieldsMap: Map<string,number>;
     RFieldsMap:Map<string,number>;
+    bs: BackEndService;
 
     CurrentRow: number = 0;
     private currentRRow: number = 0;
@@ -134,9 +135,9 @@ export class Form{
         //console.log( "GetDTOField():",id,this.ui, this.DTOFields);
         if ( !this.DTOFields)
         {
+            console.log("ERROR getDTOFIEld() DTOField IS NULL", this);
             this.Rows = new  Array<Array<DTOField<any>>>();
             this.AddFirstRow();
-            console.log("GetDTOField|() id:",id, this.DTOFields,this.Fields, this.Rows);
         }
         if ( id < this.DTOFields.length)
         {
@@ -179,10 +180,5 @@ export class Form{
     
     }
 
-    public FieldPostInput(fieldName: string,value:any):void{
-        let pi = this.Factory.GetHook(`${this.Name}-${fieldName}`);
-        if( pi )
-            this.DTOFields = pi.PostInput(fieldName,value, this);
-    }
   
 }
