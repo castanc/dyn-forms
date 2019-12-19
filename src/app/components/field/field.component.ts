@@ -50,6 +50,7 @@ export class FieldComponent implements OnInit {
   addImageUrl()
   {
 
+    /*
     if ( this.DTOField.Value && this.DTOField.Value != "" &&  this.fUI.HtmlInputType.toLowerCase()=="url") 
     {
       //TODO: NEITHER WAY THE IMAGE IS REFRESHED
@@ -58,16 +59,12 @@ export class FieldComponent implements OnInit {
         //this.fUI.ImageSource = this.DTOField.Value;
         this.DTOField.Value = "";
       }
-
+      */
   }
 
   onFocusOut()
   {
-    //todo: use postprocess factory
-    //todo: use event emitter to impact other fields
-    //this.addImageUrl();
-    this.bs.FieldPostInput(this.f.Name,this.DTOField.Value);
-
+    this.bs.FieldOnExit(this.fUI.Id);
   }
 
 }
