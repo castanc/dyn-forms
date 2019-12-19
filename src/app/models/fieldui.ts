@@ -17,9 +17,12 @@ export class FieldUI{
     SelectedValue: number = 0;
     RelatedMap: string; 
     ReadOnly: boolean = false;
-    ImageField: string ="";
-    ImageSource: string = "";
-    ImageFieldId: number = null;
+    ImageCatalogId: number;         //contains the id in bs.ImageList pointing to the url of the image
+    ImageSourceFieldId: number;     //contains the id in dtofields, of the ui field with the url
+    OnChange: string;
+    OnExit: string;
+    OnEnter: string;
+
 
     constructor(idField:number,
         name:string,
