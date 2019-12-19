@@ -16,9 +16,10 @@ import { Router } from '@angular/router';
 })
 export class GenericComponent implements OnInit {
 
-  constructor(private bs: BackEndService, router: Router) {
+  constructor(private bs: BackEndService, private router: Router) {
     if ( !bs.Form)
       router.navigate(['']);
+      console.log("genericComponent.constructor()", this.bs.Form);
 
    }
 
@@ -34,6 +35,13 @@ export class GenericComponent implements OnInit {
     if (form.valid)
     {
       this.bs.SaveForm();
+      this.router.navigate([this.bs.Form.Route]).then( (e) => {
+          if (e) {
+            console.log("Navigation is successful!",this.bs.Form.Route);
+          } else {
+            console.log("Navigation has failed!",this.bs.Form.Route);
+          }
+        });
     }
     else
     {
