@@ -1,0 +1,9 @@
+angular 8 routing
+https://www.techiediaries.com/angular-router-routerlink-navigate-navigatebyurl/
+
+indexeddb in browser
+https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
+
+js service workers
+https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Offline_Service_workers
+
