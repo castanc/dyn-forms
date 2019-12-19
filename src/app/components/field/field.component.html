@@ -19,7 +19,6 @@
            <option *ngFor="let item of fUI.List" [value]="item.Id">{{item.Value}}</option> 
         </select>
 
-    <img *ngIf="fUI.HtmlType=='img'" [name]="f.Name"
-        [src]="bs.ImageList[bs.Form.Fields[fUI.ImageFieldID]]" >
-
+    <img *ngIf="fUI.HtmlType=='img'" [name]="f.Name" [id]="f.Name"
+        [src]="bs.Form.DTOFields[fUI.ImageSourceFieldId]" >
     </div>
