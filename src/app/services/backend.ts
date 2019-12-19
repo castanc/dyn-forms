@@ -8,6 +8,9 @@ import { ListItem } from '../models/list-item'
 import { Time } from '@angular/common';
 import { DTOTable } from '../models/DTOTable'
 import { DTOField } from '../models/DTOField'
+import { FieldUI } from '../models/fieldui'
+import { HookFactory } from '../hooks/hook-factory'
+import { IHook } from '../hooks/hook-interface'
 
 @Injectable()
 export class BackEndService {
@@ -26,6 +29,7 @@ export class BackEndService {
     TotalRows: number = 0;
     ImageList: Array<ListItem> = [];
     Rows: Array<Array<DTOField<any>>> = [];
+    Factory: HookFactory = new HookFactory();
    
     Message : string = "";
 
@@ -58,6 +62,10 @@ export class BackEndService {
         
     }
 
+    public ClearData()
+    {
+    }
+
     OnDestroy(){
         this.DA.Save<Array<ListItem>>("image-list",this.ImageList);
         this.DA.Save< Array<Array<DTOField<any>>>>("data",this.Rows);
@@ -66,8 +74,8 @@ export class BackEndService {
     SaveForm():number
     {
         let result = 0;
-        if ( !this.Rows )
-            this.Rows = new  Array<Array<DTOField<any>>>();
+        //if ( !this.Rows )
+        //    this.Rows = new  Array<Array<DTOField<any>>>();
 
         if ( this.Form.Rows.length > 0)
         {
@@ -86,7 +94,7 @@ export class BackEndService {
                     i++;
                     ri.push(this.Form.Rows[r]);
                 }
-                console.log("ri after save:",ri);
+                //console.log("ri after save:",ri);
                 this.DA.Save<Array<Array<DTOField<any>>>>(`infrastructure.${this.Form.Name}`, ri);
             }
             else
@@ -99,13 +107,14 @@ export class BackEndService {
                     this.Rows.push(this.Form.Rows[r]);
                 }
                 result = this.DA.Save<Array<Array<DTOField<any>>>>("data",this.Rows);
-                console.log("data after save:",this.Rows);
+                //console.log("data after save:",this.Rows);
             }
         }
         this.Form.Rows = new  Array<Array<DTOField<any>>>();
         this.Form.AddFirstRow();
+        console.log("form saved:",this.Form);
         return result;
-    }
+    } 
 
     public SetUserDate(d: string, t: string )
     {
@@ -132,6 +141,7 @@ export class BackEndService {
         this.Form = this.DA.LoadForm(this.FormName);
         if ( this.Form)
         {
+            this.Form.bs = this;
             this.Form.DTOFields[0].Value = this.Form.Rows.length;
             this.Form.DTOFields[1].Value = this.userDate;
             this.Form.DTOFields[2].Value = this.FormId;
@@ -144,14 +154,23 @@ export class BackEndService {
         this.Form = this.DA.LoadForm(this.FormName);
         if ( this.Form)
         {
+            this.Form.bs = this;
             this.Form.DTOFields[0].Value = this.Form.Rows.length;
             //this.Form.DTOFields[1].Value = this.userDate;
             //this.Form.DTOFields[2].Value = this.FormId;
         }
     }
 
-    public FieldPostInput(fieldName: string,value:any):void{
-        this.Form.FieldPostInput(fieldName,value);
+    public FieldOnExit(uiFieldId: number):void{
+        if ( this.Form.UI[uiFieldId].OnExit)
+        {
+            let pi = this.Factory.GetHook(this.Form.UI[uiFieldId].OnExit);
+            if( pi )
+            {
+                pi.Form = this.Form;
+                pi.Process(uiFieldId);
+            }
+        }
     }
 
     private dataProviderFactory(name:string):IDataProvider{
