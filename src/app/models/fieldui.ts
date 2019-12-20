@@ -19,6 +19,7 @@ export class FieldUI{
     ReadOnly: boolean = false;
     ImageCatalogId: number;         //contains the id in bs.ImageList pointing to the url of the image
     ImageSourceFieldId: number;     //contains the id in dtofields, of the ui field with the url
+    ImageSource: string = "";
     OnChange: string;
     OnExit: string;
     OnEnter: string;
