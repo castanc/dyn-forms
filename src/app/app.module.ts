@@ -14,7 +14,6 @@ import { GenericWithRelatedComponent } from './components/generic-with-related/g
 const appRoutes: Routes = [
   { path: '', component: BaseComponent },
   { path: 'create', component: GenericComponent},
-  { path: 'createRelated', component: GenericWithRelatedComponent},
 
 ]
 
