@@ -19,7 +19,7 @@ export class BaseComponent implements OnInit {
     protected router: Router,
     protected route: ActivatedRoute)
   {
-    console.log("baseComponent.constructor())");
+    console.log("baseComponent.constructor()). Form:",this.bs.Form);
   }
 
 
