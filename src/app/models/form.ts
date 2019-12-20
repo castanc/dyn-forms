@@ -18,18 +18,19 @@ export class Form{
     Fecha: Date;
     IsTabular: boolean = false;
     Title: string = "";
-    private fields: Array<Field<any>>;
+    protected fields: Array<Field<any>>;
     public rFields:Array<Field<any>>;
-    private dtoFields: Array<DTOField<any>> = [];
-    private ui: Array<FieldUI>;
+    protected dtoFields: Array<DTOField<any>> = [];
+    protected ui: Array<FieldUI>;
     Rows: Array<Array<DTOField<any>>> = [];
     RRows: Array<Array<DTOField<any>>> = [];
     FieldsMap: Map<string,number>;
     RFieldsMap:Map<string,number>;
     bs: BackEndService;
+    PostInput: string;
 
     CurrentRow: number = 0;
-    private currentRRow: number = 0;
+    protected currentRRow: number = 0;
     CurrentRRId : number = 0; 
     set CurrentRRow(value)
     {
@@ -54,7 +55,7 @@ export class Form{
     }
 
     Infrastructure = false;
-    RelatedFormName: string = ""; 
+    RelatedFormName: string=""; 
 
     ChildForm: string;
     IgnoreFields = false;
@@ -73,6 +74,9 @@ export class Form{
 
 
     OnInit(){
+        this.CreateFieldsMap();
+        this.CreateRFieldsMap();
+
     }
 
     OnDestroy(){
@@ -117,8 +121,6 @@ export class Form{
 
     AddFirstRow(){
         this.Rows.push(this.dtoFields);
-        this.CreateFieldsMap();
-        this.CreateRFieldsMap();
     }
 
     GetField(id:number):Field<any>{
