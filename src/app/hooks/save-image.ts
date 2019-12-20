@@ -1,13 +1,14 @@
-import { IHook } from './hook-interface'
+import { IHookForm } from './hook-form-interface'
 import { DTOField } from '../models/DTOField'
 import { Form } from '../models/form'
 
 
-export class SaveImage implements IHook{
+export class SaveImage implements IHookForm{
     Form: Form;
 
-    Process(uiFieldId: number)
+    Process()
     {
+        
         /*
         let fUI = f.UI.filter(x=>x.Name== fieldName)[0];
         if( fUI && fUI.ImageFieldId)
