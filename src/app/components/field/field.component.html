@@ -21,4 +21,7 @@
 
     <img *ngIf="fUI.HtmlType=='img'" [name]="f.Name" [id]="f.Name"
         [src]="bs.Form.DTOFields[fUI.ImageSourceFieldId]" >
+
+    <img *ngIf="fUI.HtmlType=='img'" [name]="f.Name" [id]="f.Name"
+        [src]="fUI.ImageSource" >
     </div>
