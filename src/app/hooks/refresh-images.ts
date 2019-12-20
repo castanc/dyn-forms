@@ -8,6 +8,8 @@ export class RefreshImage implements IHook{
 
     Process(uiFieldId: number)
     {
+        this.Form.UI[8].ImageSource = this.Form.DTOFields[7].Value;
+        this.Form.DTOFields[10]
         /*
         console.log("IHook.RefreshImage()",uiFieldId, this.Form);
         if( this.Form.UI[uiFieldId].ImageField)
