@@ -10,7 +10,9 @@ import { DTOTable } from '../models/DTOTable'
 import { DTOField } from '../models/DTOField'
 import { FieldUI } from '../models/fieldui'
 import { HookFactory } from '../hooks/hook-factory'
+import { HookFormFactory } from '../hooks/hook-form-factory'
 import { IHook } from '../hooks/hook-interface'
+import { IHookForm } from '../hooks/hook-form-interface'
 
 @Injectable()
 export class BackEndService {
@@ -30,6 +32,7 @@ export class BackEndService {
     ImageList: Array<ListItem> = [];
     Rows: Array<Array<DTOField<any>>> = [];
     Factory: HookFactory = new HookFactory();
+    FormFactory: HookFormFactory = new HookFormFactory();
    
     Message : string = "";
 
