@@ -1,4 +1,12 @@
 
+<div *ngIf="bs.Form.RelatedFormName!=''">
+    <label>{{bs.Form.RelatedFormName}}</label>
+    <select  [name]="selector"
+    (change)="recordSelectorChanged()"
+    [(ngModel)]="ItemId" >
+    <option *ngFor="let item of bs.Form.RRows" [value]="item[0].Value">{{item[1].Value}}</option> 
+    </select>
+</div>
 <form (ngSubmit)="onSubmit(f2)" #f2="ngForm" >
 <h4>{{bs.Form.Title}}</h4>
 <br/>
