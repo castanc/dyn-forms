@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./generic.component.css']
 })
 export class GenericComponent implements OnInit {
+  private ItemId: number;
 
   constructor(private bs: BackEndService, private router: Router) {
     if ( !bs.Form)
@@ -31,6 +32,11 @@ export class GenericComponent implements OnInit {
   ngOnInit() {
   }
 
+  recordSelectorChanged()
+  {
+    this.bs.Form.CurrentRRow = this.ItemId;
+  }
+
   onSubmit(form: NgForm){
     if (form.valid)
     {
@@ -39,7 +45,9 @@ export class GenericComponent implements OnInit {
           if (e) {
             console.log("Navigation is successful!",this.bs.Form.Route);
           } else {
-            console.log("Navigation has failed!",this.bs.Form.Route);
+            console.log("*******  ERROR   ****** Navigation has failed!",this.bs.Form.Route);
+            //this.router.navigate([''])
+
           }
         });
     }
