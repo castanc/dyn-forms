@@ -2,7 +2,7 @@ import {IDataProvider } from './da-interface'
 import { Form } from '../models/form';
 import { Field } from '../models/field'
 import { FieldUI } from '../models/fieldUI'
-import { findStaticQueryIds } from '@angular/compiler';
+//import { findStaticQueryIds } from '@angular/compiler';
 import { Time } from '@angular/common';
 import { ListItem } from '../models/list-item';
 import { DTOField} from '../models/DTOField'
@@ -30,6 +30,7 @@ export class Mock implements IDataProvider{
         else obj = null;
         return obj;
    }
+
 
    Remove(key:string):number{
        let result = 0;
@@ -74,6 +75,13 @@ export class Mock implements IDataProvider{
         arr.push(new ListItem(0,"FoodItem"));
         return arr; 
 
+    }
+
+
+    LoadRecord(tableName:string,id:number):Array<DTOField<any>>{
+        let arr = new Array<DTOField<any>>();
+        let res = this.Load<Array<DTOField<any>>>(tableName, arr)
+        return res;
     }
 
 
@@ -135,18 +143,19 @@ export class Mock implements IDataProvider{
         f.Map= this.getRelatedMap(f.RelatedFormName)
 
         let fFoodItemId = new Field<number>("FoodItemId",false,0);
+        fFoodItemId.RelatedMap = "Id";
         f.AddFieldTyped<number>(fFoodItemId);
 
         let fDescr = new Field<string>("Description",true,"");
+        fDescr.RelatedMap = fDescr.Name;
         f.AddFieldTyped<string>(fDescr);
         let fUIDescr = new FieldUI(fDescr.Id,fDescr.Name,"text");
-        fUIDescr.RelatedMap = fUIDescr.Name;
         f.AddFieldUI(fUIDescr);
 
         let fCant = new Field<number>("Cantidad",true,0,1,1000);
+        fCant.RelatedMap = fCant.Name;
         f.AddFieldTyped<number>(fCant);
         let fUICant = new FieldUI(fCant.Id,fCant.Name,"input","number",4);
-        fUICant.RelatedMap = fUICant.Name;
         f.AddFieldUI(fUICant);
 
         //todo define fields to be populated from related record
@@ -154,36 +163,36 @@ export class Mock implements IDataProvider{
         //calculation= cant*(r.cant/r.calories, ... fat sugar doium)
 
         let fCalories = new Field<number>("Calories");
+        fCalories.RelatedMap = fCalories.Name;
         f.AddFieldTyped<number>(fCalories);
-        let fUIdCalories = new FieldUI(fCalories.Id,fCalories.Name,"input","number",4);
-        fUIdCalories.RelatedMap = fUIdCalories.Name;
-        f.AddFieldUI(fUIdCalories);
+        let fUICalories = new FieldUI(fCalories.Id,fCalories.Name,"input","number",4);
+        f.AddFieldUI(fUICalories);
 
         let fFat = new Field<number>("Fat");
+        fFat.RelatedMap = fFat.Name;
         f.AddFieldTyped<number>(fFat);
         let fUIFat = new FieldUI(fFat.Id,fFat.Name,"input","number",4);
-        fUIFat.RelatedMap = fUIFat.Name;
         f.AddFieldUI(fUIFat);
 
         let fSugar = new Field<number>("Sugar");
+        fSugar.RelatedMap = fSugar.Name;
         f.AddFieldTyped<number>(fSugar);
         let fUISugar =  new FieldUI(fSugar.Id,fSugar.Name,"input","number",4);
-        fUISugar.RelatedMap = fUISugar.Name;
         f.AddFieldUI(fUISugar);
 
         let fSodium = new Field<number>("Sodium");
+        fSodium.RelatedMap = fSodium.Name;
         f.AddFieldTyped<number>(fSodium);
 
         let fUISodium =  new FieldUI(fSodium.Id,fSodium.Name,"input","number",4);
-        fUISodium.RelatedMap = fUISodium.Name;
         f.AddFieldUI(fUISodium);
 
 
         let fImageID = new Field<number>("ImageID",false,0);
+        fImageID.RelatedMap = fImageID.Name;
         f.AddFieldTyped<number>(fImageID);
 
         let fUIImageId = new FieldUI(fImageID.Id,fImageID.Name,"input","hidden",4);
-        fUIImageId.RelatedMap = fUIImageId.Name;
         f.AddFieldUI(fUIImageId);
         f.AddFirstRow();
 
@@ -337,7 +346,7 @@ export class Mock implements IDataProvider{
             {
                 this.form.RRows = this.loadRelatedRows(this.form.RelatedFormName);
                 this.form.rFields = this.LoadRelatedFields(this.form.RelatedFormName);
-                console.log("rfields:", this.form.rFields);
+                //console.log("rfields:", this.form.rFields);
             }
             return this.form;
         }

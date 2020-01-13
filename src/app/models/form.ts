@@ -28,7 +28,8 @@ export class Form{
     RFieldsMap:Map<string,number>;
     bs: BackEndService;
     PostInput: string;
-
+    PreInput = "";
+    Result = 0;
     CurrentRow: number = 0;
     protected currentRRow: number = 0;
     CurrentRRId : number = 0; 
@@ -131,6 +132,10 @@ export class Form{
         }
         return f;
     }
+    GetUIFieldByname(name: string): FieldUI{
+        return this.ui.filter(x => x.Name == name)[0];
+    }
+
 
     //TODO: Try to eliminate DTOField, and use FIelds[].Value
     GetDTOField(id:number):DTOField<any>{
@@ -149,6 +154,12 @@ export class Form{
         console.log("GetDTOField|() NOT FOUND. id:",id, this.DTOFields,this.Fields);
         return new DTOField<string>();
     }
+    
+    GetDTOFieldByName(name:string):DTOField<any>{
+        let uif = this.GetUIFieldByname(name);
+        return this.DTOFields[uif.IdField];
+    }
+
 
     AddFieldTyped<T>(f: Field<T>){
         f.Id = this.Fields.length;

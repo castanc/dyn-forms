@@ -13,6 +13,7 @@ import { HookFactory } from '../hooks/hook-factory'
 import { HookFormFactory } from '../hooks/hook-form-factory'
 import { IHook } from '../hooks/hook-interface'
 import { IHookForm } from '../hooks/hook-form-interface'
+import { ThrowStmt } from '@angular/compiler';
 
 @Injectable()
 export class BackEndService {
@@ -82,6 +83,15 @@ export class BackEndService {
 
         if ( this.Form.Rows.length > 0)
         {
+            if (this.Form.PostInput )
+            {
+                let pi = this.Factory.GetHookForm(this.Form.PostInput);
+                if( pi )
+                {
+                    pi.Form = this.Form;
+                    pi.Process();
+                }
+            }
             if ( this.Form.Infrastructure)
             {
                 let ri = new Array<Array<DTOField<any>>>();
@@ -149,6 +159,7 @@ export class BackEndService {
             this.Form.DTOFields[1].Value = this.userDate;
             this.Form.DTOFields[2].Value = this.FormId;
         }
+    
     }
 
     public LoadInfrastructureForm():void {

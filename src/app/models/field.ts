@@ -5,6 +5,7 @@ export class Field<T>{
     Required : boolean = false;
     Max: T;
     Min: T;
+    RelatedMap: string;
 
     constructor(name:string,required:boolean = false,value: T =null,max: T = null, min: T = null,id:number=0){
         this.Id = id;

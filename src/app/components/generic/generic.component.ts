@@ -24,17 +24,13 @@ export class GenericComponent implements OnInit {
 
    }
 
-   private getField(id:number):Field<any>
-   {
-     return this.bs.Form.GetField(id);
-   }
-
+   
   ngOnInit() {
   }
 
   recordSelectorChanged()
   {
-    this.bs.Form.CurrentRRow = this.ItemId;
+    this.bs.Form.CurrentRRId = this.ItemId;
   }
 
   onSubmit(form: NgForm){

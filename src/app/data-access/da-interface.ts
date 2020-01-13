@@ -1,5 +1,6 @@
-import {Form} from '../models/form'
+import { Form } from '../models/form'
 import { ListItem } from '../models/list-item'
+import { DTOField } from '../models/DTOField'
 
 export interface IDataProvider {
 
@@ -16,4 +17,6 @@ export interface IDataProvider {
     LoadForm(formName: string):Form;
     SaveForm(formName: string):number;
     SaveAll():number;
+
+    LoadRecord(tableName:string,id:number):Array<DTOField<any>>;
 }
